@@ -3,8 +3,10 @@ import cv2
 import pyttsx3
 import csv
 
+#speech engine
 engine = pyttsx3.init()
 
+#function to create a sentence which will be played on left-click
 def get_text(colors_list, b,g,r):
     distance = 10000
     color = ""
@@ -13,12 +15,14 @@ def get_text(colors_list, b,g,r):
         if error < distance:
             distance = error
             color = i[0]
-
     return "The Color is " + color
 
+
+#display box with RGB values on hovering and speak the colour name on left_click
 def mouse_movement(event, x, y, flags, end_ver):
     cv2.imshow(file_name, image)
 
+    #if event is hhovering
     if event == cv2.EVENT_MOUSEMOVE:
 
         rgb = image[y,x]
@@ -42,9 +46,11 @@ def mouse_movement(event, x, y, flags, end_ver):
 
         color_code = color_code.upper()
 
+        #generate text to be displayed
         text = "Color_Code = #" + color_code + " R = " + str(R) + " G = " + str(G) + " B = " + str(B)
         print(text)
 
+        #box in which text is to be displayed
         cv2.rectangle(image, (0,0), (int(end_ver),40), (int(R),int(G),int(B)), -1)
 
         if(int(R)+int(G)+int(B)) < 600:
@@ -53,6 +59,7 @@ def mouse_movement(event, x, y, flags, end_ver):
         elif (int(R)+int(G)+int(B)) > 600:
             cv2.putText(image, text, (15, 30), 2, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
 
+     #if mouseevent is left_click
     if event == cv2.EVENT_LBUTTONDOWN:
 
         rgb = image[y, x]
@@ -86,10 +93,11 @@ def mouse_movement(event, x, y, flags, end_ver):
         elif (int(R) + int(G) + int(B)) > 600:
             cv2.putText(image, text, (15, 30), 2, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
 
+        #text to be spoken
         speak_text = get_text(colors_list, int(R), int(G), int(B))
 
         engine.setProperty('rate', 125)
-
+        #speak the generated sentence
         engine.say(speak_text)
 
         engine.runAndWait()
@@ -104,6 +112,7 @@ image_path = image_path.replace("\\","/")
 file_name = image_path.split("/")[-1]
 file_name = file_name.split(".")[0]
 
+#a csv file with all colors so to check and compare the values and family of colour
 with open('Colors.csv', newline='') as f:
     reader = csv.reader(f)
     colors_list = list(reader)

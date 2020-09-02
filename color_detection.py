@@ -3,7 +3,6 @@ import cv2
 import pyttsx3
 import csv
 
-
 engine = pyttsx3.init()
 
 def get_text(colors_list, b,g,r):
@@ -16,28 +15,6 @@ def get_text(colors_list, b,g,r):
             color = i[0]
 
     return "The Color is " + color
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 def mouse_movement(event, x, y, flags, end_ver):
     cv2.imshow(file_name, image)
@@ -119,23 +96,7 @@ def mouse_movement(event, x, y, flags, end_ver):
         cv2.imshow(file_name, image)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-image_path = input("Enter the File Path including File Name : ")
+image_path = "sample_image.jpg"
 
 image = cv2.imread(image_path, cv2.COLOR_BGR2RGB)
 
@@ -146,9 +107,6 @@ file_name = file_name.split(".")[0]
 with open('Colors.csv', newline='') as f:
     reader = csv.reader(f)
     colors_list = list(reader)
-
-
-
 
 
 end_ver = image.shape[1]

@@ -3,10 +3,11 @@ import cv2
 import pyttsx3
 import csv
 
-#speech engine
+#initialize speech engine
 engine = pyttsx3.init()
 
 #function to create a sentence which will be played on left-click
+#based on RGB values, a color will be selected from csv file 
 def get_text(colors_list, b,g,r):
     distance = 10000
     color = ""
@@ -18,13 +19,18 @@ def get_text(colors_list, b,g,r):
     return "The Color is " + color
 
 
-#display box with RGB values on hovering and speak the colour name on left_click
+#function to perform certain operations based on mouse click event
+#The operations that can be performed are
+#1.Display RGB Values
+#2. Determine the family of a colour based on RGB Values and play that name.
 def mouse_movement(event, x, y, flags, end_ver):
     cv2.imshow(file_name, image)
 
-    #if event is hhovering
+    #if mouse_event is hhovering
+    #Fetch RGB valuesand display them along with name of family of colour
     if event == cv2.EVENT_MOUSEMOVE:
 
+        #getting the RGB values
         rgb = image[y,x]
         R = rgb[0]
         G = rgb[1]
@@ -42,15 +48,16 @@ def mouse_movement(event, x, y, flags, end_ver):
         if len(r_hex) == 1:
             r_hex = "0" + r_hex
 
+        #finding color code in HEX
         color_code = r_hex + g_hex + b_hex
 
         color_code = color_code.upper()
 
-        #generate text to be displayed
+        #generate text to be displayed while Hovering
         text = "Color_Code = #" + color_code + " R = " + str(R) + " G = " + str(G) + " B = " + str(B)
         print(text)
 
-        #box in which text is to be displayed
+        #create box in which text is to be displayed
         cv2.rectangle(image, (0,0), (int(end_ver),40), (int(R),int(G),int(B)), -1)
 
         if(int(R)+int(G)+int(B)) < 600:
@@ -59,7 +66,10 @@ def mouse_movement(event, x, y, flags, end_ver):
         elif (int(R)+int(G)+int(B)) > 600:
             cv2.putText(image, text, (15, 30), 2, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
 
-     #if mouseevent is left_click
+    #if mouseevent is left_click
+    #fetch RGB Values
+    #find the colour name
+    #Create sentence and play it using pyttsx engine
     if event == cv2.EVENT_LBUTTONDOWN:
 
         rgb = image[y, x]
@@ -79,6 +89,7 @@ def mouse_movement(event, x, y, flags, end_ver):
         if len(r_hex) == 1:
             r_hex = "0" + r_hex
 
+        #find colour code in HEX
         color_code = "#" + r_hex + g_hex + b_hex
 
         color_code = color_code.upper()
@@ -93,37 +104,48 @@ def mouse_movement(event, x, y, flags, end_ver):
         elif (int(R) + int(G) + int(B)) > 600:
             cv2.putText(image, text, (15, 30), 2, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
 
-        #text to be spoken
+        #text to be spoken is generated using "get_text" function
+        #the below function finds the name of colour and also creates sentence to be spoken.
         speak_text = get_text(colors_list, int(R), int(G), int(B))
 
+        #setting the properties of the engine like rate, voice and so on
         engine.setProperty('rate', 125)
-        #speak the generated sentence
+        
+        #play the generated sentence
         engine.say(speak_text)
 
         engine.runAndWait()
         cv2.imshow(file_name, image)
 
 
+        
+#beginning of execution
+#path of image file
 image_path = "sample_image.jpg"
 
+#read/load the image file
 image = cv2.imread(image_path, cv2.COLOR_BGR2RGB)
 
+#modify file path to get only file_name
 image_path = image_path.replace("\\","/")
 file_name = image_path.split("/")[-1]
 file_name = file_name.split(".")[0]
 
-#a csv file with all colors so to check and compare the values and family of colour
+#load the csv file with all colors so to check and compare the RGB values and find the family of colour
 with open('Colors.csv', newline='') as f:
     reader = csv.reader(f)
     colors_list = list(reader)
 
 
 end_ver = image.shape[1]
+
 cv2.imshow(file_name, image)
 #cv2.rectangle(image, (20,20), (100,60), (0,255,0), -1)
 
+#event checker that detects any mouse events and performs displaying or playing based on mouse event.
 cv2.setMouseCallback(file_name, mouse_movement, end_ver)
 
+#infinte while loop which exits when "esc" key is pressed.
 while(1):
     cv2.imshow(file_name, image)
 

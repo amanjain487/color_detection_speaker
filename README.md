@@ -4,7 +4,7 @@ This code helps the user to fetch the RGB value of any pixel in an image by just
 ## Requirements
 1. Python 3.8 or above
 
-## Required Modules
+### Required Modules
 ```
 1. csv - to open and read csv file containing colors
 2. cv2 - read and display image/sample_image

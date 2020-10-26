@@ -1,4 +1,3 @@
-import numpy as np
 import cv2
 import pyttsx3
 import csv

@@ -25,8 +25,8 @@ def get_text(colors_list, b,g,r):
 def mouse_movement(event, x, y, flags, end_ver):
     cv2.imshow(file_name, image)
 
-    #if mouse_event is hhovering
-    #Fetch RGB valuesand display them along with name of family of colour
+    #if mouse_event is hovering
+    #Fetch RGB values and display them along with name of family of colour
     if event == cv2.EVENT_MOUSEMOVE:
 
         #getting the RGB values
